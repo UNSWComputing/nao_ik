@@ -17,6 +17,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "nao_command_msgs/msg/joint_positions.hpp"
+#include "nao_command_msgs/msg/joint_stiffnesses.hpp"
 #include "biped_interfaces/msg/sole_poses.hpp"
 
 struct Pose3f;
@@ -33,6 +34,9 @@ private:
 
   rclcpp::Subscription<biped_interfaces::msg::SolePoses>::SharedPtr sub_sole_poses;
   rclcpp::Publisher<nao_command_msgs::msg::JointPositions>::SharedPtr pub_joints;
+
+  nao_command_msgs::msg::JointStiffnesses stiffnessMax;
+  rclcpp::Publisher<nao_command_msgs::msg::JointStiffnesses>::SharedPtr pub_stiffnesses;
 };
 
 #endif  // NAO_IK__IK_HPP_

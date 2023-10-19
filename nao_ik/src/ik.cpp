@@ -15,6 +15,7 @@
 #include "nao_ik/ik.hpp"
 #include "nao_command_msgs/msg/joint_indexes.hpp"
 #include "nao_ik/bhuman/ik_bhuman.hpp"
+#include "nao_ik/indexes.hpp"
 
 IK::IK()
 : Node("IK")
@@ -31,8 +32,19 @@ IK::IK()
       rd.lowerLegLength = 0.1029;
       rd.footHeight = 0.04519;
       ik_bhuman::calcLegJoints(sole_poses->l_sole, sole_poses->r_sole, joints, rd);
+      pub_stiffnesses->publish(stiffnessMax);
       pub_joints->publish(joints);
     });
+
+  stiffnessMax = nao_command_msgs::msg::JointStiffnesses()
+  .set__indexes(indexes::indexes)
+  .set__stiffnesses({1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1});
+  stiffnessMax.stiffnesses[nao_command_msgs::msg::JointIndexes::LSHOULDERPITCH] = 0;
+  stiffnessMax.stiffnesses[nao_command_msgs::msg::JointIndexes::RSHOULDERPITCH] = 0;
+  stiffnessMax.stiffnesses[nao_command_msgs::msg::JointIndexes::LSHOULDERROLL] = 0;
+  stiffnessMax.stiffnesses[nao_command_msgs::msg::JointIndexes::RSHOULDERROLL] = 0;
+  pub_stiffnesses =
+    this->create_publisher<nao_command_msgs::msg::JointStiffnesses>("effectors/joint_stiffnesses", 10);
 
   pub_joints =
     this->create_publisher<nao_command_msgs::msg::JointPositions>("effectors/joint_positions", 10);
